@@ -1,0 +1,40 @@
+﻿#header, #left, #buttons, .msg, .instructions, .controls, .nicEdit-panel, .droppable {
+	display:none; 
+}
+html, body, input, textarea {
+	background-color:#ffffff; 
+	color:#000000 !important;
+}
+#bgcolor {
+	border:2px solid #aaa; 
+}
+html, body, #container, #layout, #bgcolor, #fields {
+	overflow: visible !important;
+    overflow-x: visible;
+}
+#layout, #fields {
+	padding: 0px 0px;	
+}
+#fields {
+display:block;
+padding-left:20px;
+}
+.inputs {
+display:block !important;
+}
+label,.name, .name.active {
+color:#000000;
+}
+.name::before, .name.active::before {
+    content: "";
+    padding-right: 0px;
+    margin-left: 0px;
+}
+#bgcolor > div {
+width: 400px;
+    height: auto !important;
+margin-bottom: -7px;
+}
+#bgcolor img {
+    width: 400px;
+}

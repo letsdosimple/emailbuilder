@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Email builder 5 for MA implementers only
+    </title>
+    <meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1">
+    <link rel="icon" href="https://letsdosimple.com/wp-content/uploads/2023/12/icon-70.png">
+    <link rel="stylesheet" href="adelle.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="colorbox.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+            color: #51534A;
+            text-align: center;
+            font-family: Adelle, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        #displayTooSmall {
+            display: none;
+        }
+
+        #header {
+            height: auto;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 2;
+            background-color: #000000;
+            text-align: center;
+            padding: 10px 10px 10px 10px;
+            border-bottom: 2px solid #EEEEED;
+            vertical-align: middle;
+            font-size: 33px;
+            color: #8E8A86;
+            font-weight: 300;
+        }
+
+        #header-content {
+            max-width: 1120px;
+            margin: 0 auto;
+            font-family: "Adelle", sans-serif;
+            font-size: 32px;
+            color: #00DC00;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        #header-content>div {
+            color: #ffffff;
+            font-size: 36px;
+            font-weight: 100;
+            display: inline-block;
+            vertical-align: top;
+            line-height: 24px;
+            padding-top: 16px;
+            padding-left: 10px;
+        }
+
+        #header img {
+            vertical-align: middle;
+            float: center;
+        }
+
+        #header>a {
+            float: right;
+            position: fixed;
+            right: 20px;
+            font-size: 18px;
+            color: #8E8A86;
+            text-decoration: none;
+            outline: none;
+        }
+
+        #header>a:hover {
+            color: #00D639;
+            cursor: pointer;
+        }
+
+        #helpPopup a {
+            color: #c8006e;
+            text-decoration: none;
+        }
+
+        #helpPopup a:hover {
+            text-decoration: underline;
+        }
+
+        #container {
+            display: flex;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+            width: 100%;
+            backface-visibility: hidden;
+            will-change: overflow;
+        }
+
+        #left,
+        #layout,
+        #fields {
+            overflow: auto;
+            height: auto;
+            padding: 80px 0px 40px;
+            -webkit-overflow-scrolling: touch;
+            -ms-overflow-style: none;
+        }
+
+        #left {
+            width: 500px;
+            border-right: 1px dashed #cccccc;
+        }
+
+        #layout {
+            flex: auto;
+        }
+
+        #fields {
+            width: 600px;
+            border-left: 1px dashed #cccccc;
+            display: none;
+        }
+
+        #left::-webkit-scrollbar,
+        #layout::-webkit-scrollbar,
+        #fields::-webkit-scrollbar {
+            display: none;
+        }
+
+        table {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        td {
+            max-width: 50%;
+            vertical-align: top;
+        }
+
+        .title {
+            padding: 20px 0px;
+            font-size: 24px;
+        }
+
+        #chooseLayout {
+            margin: 10px auto 20px;
+            display: block;
+        }
+
+        #modules>img {
+            width: 300px;
+            height: auto;
+            display: block;
+            margin: 0px auto 5px;
+            border: 1px solid #A7A8AA;
+            cursor: -moz-grab;
+            cursor: -webkit-grab;
+            cursor: grab;
+            box-shadow: 5px 5px 30px #ddd;
+        }
+
+        #modules>img:active {
+            cursor: -moz-grabbing;
+            cursor: -webkit-grabbing;
+            cursor: grabbing;
+        }
+
+        #bgcolor>div {
+            width: 600px;
+            height: 100px;
+            border: 1px dotted #aaaaaa;
+            margin: 1px 0px;
+        }
+
+        #bgcolor>div.dragEnter {
+            border: 2px dotted red;
+        }
+
+        #bgcolor>div:hover {
+            cursor: url('trash-filled.png') 1 1, pointer;
+        }
+
+        #bgcolor>div.droppable:hover {
+            background-color: rgba(255, 0, 0, 0.1);
+        }
+
+        #bgcolor img {
+            width: 600px;
+        }
+
+        #dynamics {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #dynamics>div {
+            width: 400px;
+            margin: 10px auto;
+            text-align: left;
+        }
+
+        #dynamics span {
+            font-size: 13px;
+            font-style: italic;
+            font-weight: normal;
+            display: block;
+            margin: 5px auto 15px;
+        }
+
+        label {
+            color: #2C2A29;
+            margin: 15px auto;
+        }
+
+        .inputs>label {
+            display: block;
+            font-weight: bold;
+            text-align: left;
+            width: 400px;
+        }
+
+        label>input,
+        label>textarea {
+            display: block;
+            background-color: #ffffff;
+            border-width: 0px 0px 2px 0px;
+            border-color: #d3d3d3;
+            color: #000000;
+            outline: none;
+            width: 100%;
+            height: 30px;
+            font-size: 15px;
+            border-radius: 4px;
+            padding: 3px 5px;
+            margin-top: 3px;
+        }
+
+        label>textarea {
+            min-height: 30px;
+            min-width: 300px;
+            max-width: 400px;
+        }
+
+        select {
+            max-width: 300px;
+            background-color: #ffffff;
+            color: #2C2A29;
+            height: 35px;
+            width: 100%;
+            border-radius: 4px;
+        }
+
+        #bgcolor {
+            background-color: #e5e5e6;
+            padding: 20px 40px;
+            display: inline-block;
+            margin: 0 auto;
+        }
+
+        .droppable::after {
+            display: block;
+            padding-top: 40px;
+            color: #aaaaaa;
+            content: "Drag a module here or click to delete this container";
+        }
+
+        .droppable:nth-child(1):after {
+            content: "Drag a module here";
+        }
+
+        .controls i {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 22px;
+            padding: 8px;
+            border: 1px solid #51534A;
+            border-radius: 5px;
+            color: #00D639;
+            font-style: normal;
+            line-height: 18px;
+        }
+
+        .controls .print:after {
+            font-family: fontAwesome;
+            content: "\f0c7";
+        }
+
+        .controls .print.loading:after {
+            font-family: fontAwesome;
+            content: "\f110";
+            animation: spin 2s linear infinite;
+        }
+
+        .controls i:hover {
+            color: #ffffff;
+            background-color: #51534A;
+        }
+
+        .cursive {
+            font-family: 'Indie Flower', cursive;
+            margin: 10px auto;
+            color: #004B87;
+            font-weight: bold;
+        }
+
+        .slideIn,
+        .step2 {
+            display: none;
+        }
+
+        .name {
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .name:hover,
+        .name.active {
+            color: #00D639;
+            cursor: pointer;
+        }
+
+        .name::before {
+            font-family: FontAwesome;
+            content: "\f0fe";
+            padding-right: 10px;
+            margin-left: -25px;
+        }
+
+        .name.active::before {
+            font-family: FontAwesome;
+            content: "\f147";
+            padding-right: 10px;
+            margin-left: -25px;
+        }
+
+        .name.invalid::after {
+            font-family: FontAwesome;
+            content: "\f06a";
+            margin-left: 15px;
+            color: #ef770f;
+        }
+
+        .name.valid::after {
+            font-family: FontAwesome;
+            /*content: "\f058";*/
+            margin-left: 15px;
+            color: #00DC00;
+        }
+
+        .inputs {
+            display: none;
+        }
+
+        .nicEdit-main {
+            background-color: #fff !important;
+            color: #2C2A29 !important;
+            font-weight: normal !important;
+            padding: 6px 8px 10px 8px !important;
+            margin: 0px !important;
+            line-height: 1.6 !important;
+            cursor: text !important;
+            font-size: 15px !important;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .emailName {
+            font-size: 14px;
+            display: block;
+        }
+
+        .controls i.attach {
+            display: none;
+        }
+
+        .notes {
+            display: block;
+            margin: 5px auto;
+            text-align: center;
+            font-size: 14px;
+            font-style: italic;
+            color: #00D639;
+            font-weight: normal;
+            text-decoration: none;
+        }
+
+        .notes:hover {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        font,
+        .nicEdit-selectTxt {
+            color: #2C2A29;
+        }
+
+        #filter {
+            font-size: 0.8em;
+            display: none;
+            margin: 30px auto 20px;
+        }
+
+        #filter>span {
+            border: 1px solid #51534A;
+            padding: 10px;
+            border-radius: 26px;
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        #filter>span:hover {
+            background-color: #ffffff;
+            color: #51534A;
+            cursor: pointer;
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        #filter>span.active {
+            background-color: #000000;
+            color: #ffffff;
+            border: 1px solid #000000;
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        #bgcolor>div.dropping {
+            border: 1px solid rgba(0, 220, 0, 0.3) !important;
+            background-color: rgba(0, 220, 0, 0.15) !important;
+        }
+
+        #bgcolor>div.dropping.hover {
+            border: 1px solid rgba(0, 220, 0, 0.6) !important;
+            background-color: rgba(0, 220, 0, 0.3) !important;
+        }
+
+        #loader-wrapper {
+            z-index: 1000;
+            margin-right: -15px;
+            padding-top: 100px;
+            margin-left: -15px;
+            text-align: center;
+            padding-bottom: 50px;
+        }
+
+        #loader {
+            display: block;
+            position: relative;
+            left: 50%;
+            top: 50%;
+            width: 100px;
+            height: 100px;
+            margin: -50px 0 0 -50px;
+            border: 3px solid #3498db;
+            z-index: 1500;
+        }
+
+        #loader:before {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 3px solid #e74c3c;
+        }
+
+        #loader:after {
+            content: "";
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 3px solid #f9c922;
+        }
+
+        #loader {
+            border: 3px solid transparent;
+            border-top-color: #C8006E;
+        }
+
+        #loader:before {
+            border: 3px solid transparent;
+            border-top-color: #00DC00;
+        }
+
+        #loader:after {
+            border: 3px solid transparent;
+            border-top-color: #003349;
+        }
+
+        #loader {
+            border-radius: 50%;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+
+        #loader:before {
+            border-radius: 50%;
+            -webkit-animation: spin 3s linear infinite;
+            animation: spin 3s linear infinite;
+        }
+
+        #loader:after {
+            border-radius: 50%;
+            -webkit-animation: spin 1.5s linear infinite;
+            animation: spin 1.5s linear infinite;
+        }
+
+        #overlay {
+            position: fixed;
+            display: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #f5f5f5;
+            z-index: 9999;
+            cursor: pointer;
+            padding-top: 100px;
+        }
+
+        #instructions {
+            text-align: left;
+            padding: 30px;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        .icon-spin {
+            display: inline-block;
+            -moz-animation: spin 2s infinite linear;
+            -o-animation: spin 2s infinite linear;
+            -webkit-animation: spin 2s infinite linear;
+            animation: spin 2s infinite linear;
+        }
+
+        .icon-spin.icon-spin-reverse {
+            -moz-animation-direction: reverse;
+            -o-animation-direction: reverse;
+            -webkit-animation-direction: reverse;
+            animation-direction: reverse;
+        }
+
+        html {
+            font-family: Adelle, sans-serif;
+            line-height: 1.4;
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .firefox {
+            display: none;
+            margin: 100px auto;
+            border: 2px dotted red;
+            padding: 20px;
+            height: 200px;
+            border-radius: 5px;
+            max-width: 400px;
+        }
+
+        @-moz-document url-prefix() {
+            /* #container, #header {
+          display:none;
+        }
+        .firefox {
+          display:block;
+        }
+        */
+        }
+
+        .defaults {
+            padding: 0;
+            margin: 0;
+            color: #51534A;
+            text-align: center;
+            font-family: Sage Text, sans-serif;
+            font-weight: 500;
+            background-color: #f5f5f5;
+        }
+
+        @media only screen and (max-width: 780px) {
+            #displayTooSmall {
+                display: block;
+            }
+
+            #container {
+                display: none;
+            }
+
+            .mobhide {
+                display: none !important;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="print.css" media="print">
+</head>
+
+<body>
+    <div id="header" class="">
+        <div id="header-content" class="">
+            <img id="sageLogo" src="https://letsdosimple.com/wp-content/uploads/2023/11/logo-200.png"
+                alt="Letsdosimple Logo" style="width:105px;">
+            <div class="">Email Builder 5.0
+            </div>
+            <span class="mobhide" style="float:right;font-size:14px;padding-top:15px;display: inline-block;">
+                <a class="inline cboxElement" id="helpLink"
+                    style="color:#00D639; text-decoration:none;outline: none;font-weight:normal;" href="#helpPopup">
+                    <i class="fa fa-info-circle" aria-hidden="true"
+                        style="color:#ffffff;font-size:18px;vertical-align:top;font-weight:normal;line-height:18px;">
+                    </i>&nbsp; Help!
+                </a>
+                &nbsp;
+                &nbsp;
+            </span>
+        </div>
+    </div>
+    <div class="firefox">
+        WARNING! THIS TOOL DOESN'T WORK CORRECTLY IN FIREFOX.
+        <br>
+        <br>
+        Please use
+        <a href="https://www.google.com/chrome/" target="_blank">Google Chrome
+        </a>.
+    </div>
+    <div id="container">
+        <div id="left" style="display: block;" class="">
+            <div id="loadingimg" style="text-align: center; display: none;">
+                <div id="loader-wrapper">
+                    <div id="loader">
+                    </div>
+                    <h4> Loading...
+                    </h4>
+                </div>
+            </div>
+            <div class="slideIn" style="display: block;">
+                <span class="emailName">
+                </span>
+                <div class="cursive" style="display: none;">Start by choosing a layout ↓
+
+
+                </div>
+                <!-- <select id="chooseLayout"> 
+          </select>  -->
+            </div>
+
+
+            <div id="status">loading...
+            </div>
+            <div id="modules">
+                <br><br><br><br><br><br><br><br><br>
+
+            </div>
+        </div>
+        <div id="layout" class="">
+            <div class="" style="display: block;">
+                <div class="controls" style="text-align: right;">
+                    <span>
+                    </span>
+                </div>
+                <div style="visibility: visible;" class="instructions cursive">
+                    <div id="filter" style="display: block; font: sage text">
+                        <!-- <span class="active defaults" data-filter="all" id="submit_code">Download HTML</span>&emsp;-->
+                        <span class="active defaults" data-filter="all" id="Copy_Code">Copy to Clipboard
+                        </span>
+                    </div>
+                </div>
+                <div id="bgcolor">
+                    <div id="fklzp" style="height: 90px; border: 0px;" class="">
+                        <img id="guntm" data-name="A1" data-type="module" data-group="All Modules"
+                            data-fields="text-Logo,text-Hyperlink"
+                            src="https://letsdosimple.com/wp-content/uploads/2023/11/logo-200.png"
+                            ondragend="dragend(event)" class="unique dropped" title="Click to remove this module"
+                            ondragstart="drag(event)" draggable="true">
+                    </div>
+                    <div id="sxpux" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)"
+                        ondragleave="dragLeave(event)" class="droppable">
+                    </div>
+                </div>
+                <div class="controls">
+                    <i class="fa fa-plus-circle add" title="Add a Module Container" style="display: inline-block;">
+                    </i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="displayTooSmall" style="padding-top:150px;">
+        <i class="fa fa-desktop" aria-hidden="true" style="font-size:40px;">
+        </i>
+        <br>
+        <br>
+        Please visit this page on a desktop browser.
+        <br>
+        If you're on your computer, simply maximise the window.
+        <br>
+        <br>
+        Chrome works best.
+        <br>
+        <br>
+        Thank you ☺
+    </div>
+    <input type="hidden" id="emailName" name="emailName">
+    <input type="hidden" id="campaignName" name="campaignName">
+    <input type="hidden" id="campaignID" name="campaignID">
+    <div style="display:none">
+        <div class="popups" id="helpPopup">
+            <h2 style="color:#c8006e;">Welcome to our Email Builder
+            </h2>
+            <p>This tool allows you to drag and drop the modules from our master template and generate the HTML which
+                you can use for building the email
+            </p>
+            <p>The objective of this tool is to reduce the time for building the templates by traditionally copying and
+                pasting module by module and decrease the chances of human error while manually copying and pasting the
+                code.
+            </p>
+            <ol style="text-align:left;">
+                <li>Start by simply choosing an option on the left and dragging the relevant layout/module over to the
+                    right.
+                </li>
+                <li>You can delete a module that was added, by simply 'Double clicking' on the module.
+                </li>
+                <li>Once you are happy with the template, click on 'Copy to clipboard'. Now simply paste the code on
+                    your 'blank HTML' email in Eloqua.
+                </li>
+            </ol>
+            <p>Any questions/ideas/issues, please contact
+                <a href="mailto:demandmarketing@sage.com" target="_blank">demandmarketing@sage.com
+                </a>.
+            </p>
+            <p>
+                <i>As always, we recommend using
+                    <a href="https://www.google.com/chrome/" target="_blank">Google Chrome
+                    </a> for all our tools.
+                </i>
+            </p>
+        </div>
+    </div>
+    <textarea id="holdtext" style="display:none;">
+    </textarea>
+    <script type="text/javascript"
+        src="https://img06.en25.com/Web/SageGlobalInstance/{9b258495-9c9c-4450-b213-409ad311802e}_jquery.min.js"> </script>
+    <script src="https://img06.en25.com/Web/SageGlobalInstance/{1ea16071-2152-43dd-a4d4-b282efa407db}_tabletop.min.js">
+    </script>
+    <script type="text/javascript"
+        src="      https://images.go.sage.com/Web/SageGlobalInstance/{e59b225d-8aaf-4f00-8f24-034ec7773166}_papaparse.min.js"> </script>
+    <script src="https://img06.en25.com/Web/SageGlobalInstance/{1c79208c-f2c3-4e62-8481-4304ea1d1efd}_colorbox.js">
+    </script>
+    <script
+        src='https://images.go.sage.com/Web/SageGlobalInstance/{e59b225d-8aaf-4f00-8f24-034ec7773166}_papaparse.min.js'>
+        </script>
+
+    <script> //rewritten for PapaParse by GW - big thanks to Roya E and Craig H for trying to fix broken code
+        var CodeBase;
+        $(function () {
+            var query = document.location.search.replace('?', '');
+            query = query.split('&');
+            for (var i = 0; i < query.length; i++) {
+                var field = query[i].split("=");
+                var field_name = field[0];
+                var field_val = decodeURI(field[1]);
+                $("input[name='" + field_name + "'], select[name='" + field_name + "']").val(field_val);
+                $("span[class='" + field_name + "']").text(field_val);
+            }
+            var emailName = $('#emailName').val();
+            if (emailName == "") {
+                $('#overlay').fadeIn();
+            }
+            else {
+                $('title').text("Email Brief: " + emailName);
+                var elementURL = "https://sagegroup.my.salesforce.com/" + $('#campaignID').val();
+                $('.elementURL').attr('href', elementURL);
+            }
+            console.log("init function running");
+            //Papa.parse( 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSY_wWFi0mfC3AXuVreReKSTg9egbJc_blBP-KbuIr-jmcCTbwGPoWMrPpM_L4RMAuKjbEUHl63uEZm/pub?output=csv', {
+
+
+            /*Papa.parse('https://docs.google.com/spreadsheets/d/e/2PACX-1vQq6vdi4eqGgHbKBb0Qn4VvJcHn_Jd9VwFjzO2ZDZhMsNgUlSOXlRC9xZxz3OSZQl3SFXGVFDsZu_Hz/pub?output=csv', {*/
+
+            
+            Papa.parse('Emailbuilder5.0-Sheet1.csv', {
+
+
+                download: true,
+                header: true,
+                error: function (err, file, inputElem, reason) {
+                    console.log("inError");
+                }
+                ,
+                complete: function (results) {
+                    console.log("inComplete");
+                    var data = results.data;
+                    console.log(data);
+                    $('#status').slideUp();
+                    CodeBase = data;
+                    var htmlText = '';
+                    for (var key in data) {
+                        if (data[key].Optional == "No" && data[key].ModType == "Non_Module") {
+                            continue;
+                        }
+                        else {
+                            htmlText += '<img id="' + data[key].Module_name + '" title="' + data[key].Module_name + '" data-name="' + data[key].Module_name + '" data-type="' + data[key].ModType + '"src="' + data[key].thumbnail_image_URL + '" class="all' + '" draggable="true" ondragstart="drag(event)" ondragend="dragend(event)" >';
+                        }
+                    }
+                    $('#modules').append(htmlText);
+                    //GW Modules are loading in background, just hidden by the slideup
+                    //        $('#modules').slideUp();
+                    var array = [];
+                    for (var key in data) {
+                        var obj = {
+                        };
+                        if (data[key].ModType != "Non_Module") {
+                            obj.type = data[key].ModType;
+                            array.push(obj);
+                        }
+                    }
+                    var unique = [];
+                    $.each(array, function (i, e) {
+                        var matchingItems = $.grep(unique, function (item) {
+                            return item.type === e.type;
+                        }
+                        );
+                        if (matchingItems.length === 0) unique.push(e);
+                    }
+                    );
+                    $('#chooseLayout').append('<option value="">Please select a segment size</option>');
+                    for (var key in unique) {
+                        var type = unique[key].type;
+                        $('#chooseLayout').append($('<option/>').attr("value", type).text(type));
+                    }
+                }
+            }
+            );
+        }
+        );
+    </script>
+
+
+    <script type="text/javascript"
+        src="https://img06.en25.com/Web/SageGlobalInstance/{e7522442-7e38-4db1-b487-2bb86e3af641}_nicedit.js">
+        </script>
+    <script>
+        var AddedModules = [];
+        var SeqNO = 0;
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+        function drag(ev) {
+            var dragIcon = document.createElement('img');
+            dragIcon.src = 'https://img06.en25.com/EloquaImages/clients/SageGlobalInstance/%7b995bcbb9-bafe-487c-b350-e02f0c5ef22a%7d_sage-logo.png';
+            dragIcon.width = 100;
+            ev.dataTransfer.setData("text", ev.target.id);
+            ev.dataTransfer.setDragImage(dragIcon, -10, -10);
+            $('.droppable').addClass('dropping');
+        }
+        function dragend(ev) {
+            $('#bgcolor div').removeClass('dropping');
+            $('#bgcolor div').removeClass('hover');
+        }
+        function dragEnter(ev) {
+            $(ev.target).addClass('hover');
+        }
+        function dragLeave(ev) {
+            $(ev.target).removeClass('hover');
+        }
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            var module = document.getElementById(data);
+            var height = module.height;
+            var target = ev.target;
+            if ($(module).hasClass('dropped')) {
+                $(module).parent().css('border', '1px dotted #aaaaaa');
+                $(module).parent().css('height', '100px');
+                $(module).parent().attr("ondragover", "allowDrop(event)");
+                $(module).parent().attr("ondrop", "drop(event)");
+                $(module).parent().addClass("droppable");
+                var h = 1;
+            }
+            else {
+                var h = 2;
+                //var id = $(module).data('name');
+                var id = makeid();
+                $('#bgcolor').append('<div id="' + id + '" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" class="droppable"></div>');
+            }
+            if ($('#' + data).hasClass('unique')) {
+                $(module).addClass("unique");
+            }
+            else if ($('#' + data).hasClass('uniquef')) {
+                $(module).addClass("uniquef");
+            }
+            $(module).attr("title", "Click to remove this module");
+            //SeqNO++;
+            $(module).attr("SeqNO", SeqNO);
+            if ($('#' + data).hasClass('dropped')) {
+                ev.target.appendChild(module);
+            }
+            else {
+                if ($('#' + data).hasClass('unique') || $('#' + data).hasClass('uniquef')) {
+                    $(module).addClass("dropped");
+                    ev.target.appendChild(module);
+                    var newid = $(module).attr('id');
+                }
+                else {
+                    var copy = module.cloneNode(true);
+                    $(copy).addClass("dropped");
+                    var newid = makeid();
+                    $(copy).attr('id', newid);
+                    ev.target.appendChild(copy);
+                }
+                /*
+          var name = $(module).data('name');
+          var guidance = $(module).data('guidance');
+          var fields = $(module).data('fields');
+          var pairs = fields.split(',');
+          var html = '<div class="' + newid + '" data-id="' + newid + '"><div class="name invalid">' + name + '</div><div class="inputs">';
+          for (var i = 0; i < pairs.length; i++) {
+            if(pairs[i] == "hr" ) {
+              html += "<hr>";
+            } else {
+              var field = pairs[i].split("-");
+              var type = field[0];
+              var label = field[1];
+              label = label.replace(/_/g, " ")
+              var unique = newid + '-' + label;
+              if(type == "text") {
+                html += '<label for="' + unique + '">' + label + ' <textarea id="' + unique + '"></textarea></label>';
+              } else if(type == "textarea") {
+                html += '<label for="' + unique + '">' + label + ' <textarea class="addRich" id="' + unique + '"></textarea></label>';        
+              }
+            }
+          } 
+          html += '<span>' + guidance + '</span></div>'
+          $('#dynamics').append(html);
+          $('#dynamics textarea').each( function() {
+            if( $(this).hasClass('addRich') ) {
+              var id = $(this).attr('id');
+              new nicEditor({buttonList : ['fontSize','bold','italic','underline','strikeThrough','subscript','superscript','link','unlink','ol','ul','left','center']}).panelInstance( id );
+              //nicEditors.allTextAreas({buttonList : ['fontSize','bold','italic','underline','strikeThrough','subscript','superscript','link','unlink','ol','ul','left','center']});
+            }
+          });
+          $('.nicEdit-panelContain').parent().width('100%');
+          $('.nicEdit-main').parent().css('width','100%');
+          $('.nicEdit-main').width('auto');
+          $('#dynamics textarea').removeClass('addRich');
+          */
+            }
+            $(target).css('height', height * h);
+            $(target).css('border', '0px');
+            $(target).removeAttr("ondragover");
+            $(target).removeAttr("ondrop");
+            $(target).removeClass("droppable");
+            reorder();
+            addNotes();
+            scroll();
+        }
+        function scroll() {
+            var height = $(document).height() + $('#bgcolor').height();
+            $("#layout").animate({
+                scrollTop: height
+            }
+                , 500);
+        }
+        function addNotes() {
+            var emailName = $('#emailName').val();
+            $('#dynamics .notes').remove();
+            $('#dynamics').find('input,textarea,select').each(function () {
+                if ($(this).parent('label').text().indexOf('Banner Image') > -1) {
+                    $(this).after('<a class="notes" href="https://get.sage.com/BannerBuilder?emailName=' + emailName + '" target="_blank">You can use Banner Builder to create this image</a>');
+                }
+            }
+            );
+        }
+        function reorder() {
+            $('#bgcolor > div').each(function () {
+                var index = $(this).index();
+                var id = $(this).children().attr('id');
+                var inputs = $('#dynamics').find("." + id);
+                $(inputs).css('order', index + 1);
+            }
+            );
+        }
+        function createName() {
+            $('#overlay').fadeOut();
+            var emailName = $('#newEmailName').val();
+            $(".emailName").text(emailName);
+            $('title').text("Email Brief: " + emailName);
+        }
+        $('body').on('change', 'select', function () {
+            $(this).find('option:not(:selected)').removeAttr('selected');
+            $(this).find('option:selected').attr('selected', 'selected');
+        }
+        );
+        $('body').on('blur', 'input', function () {
+            $(this).attr('value', $(this).val());
+        }
+        );
+        $('body').on('blur', 'textarea', function () {
+            $(this).html($(this).val());
+        }
+        );
+        $('#createName').click(function () {
+            createName()
+        }
+        );
+        $('#newEmailName').keypress(function (e) {
+            if (e.which == 13) {
+                createName();
+            }
+        }
+        );
+        $('body').on('click', '#bgcolor > div', function () {
+            if ($(this).hasClass('locked')) {
+                alert("You'll need to go back to Step 1 to remove modules!");
+            }
+            else {
+                var count = $('#bgcolor > div').length;
+                if ($(this).hasClass('droppable') && count < 2) {
+                    alert("Oops! You can't remove the last container :)");
+                }
+                else if ($(this).hasClass('droppable')) {
+                    $(this).remove();
+                }
+                else {
+                    var r = confirm("Do you really want to delete this module? Any content you've written will be lost.");
+                    if (r == true) {
+                        var img = $(this).children('img');
+                        var id = $(img).attr('id');
+                        var inputs = $('#dynamics').find("." + id);
+                        $(inputs).remove();
+                        AddedModules.indexOf(id);
+                        var id = makeid();
+                        var src = img.attr('src');
+                        var name = img.data('name');
+                        var type = img.data('type');
+                        var group = img.data('group');
+                        var fields = img.data('fields');
+                        if (img.hasClass('unique')) {
+                            $('#modules').prepend('<img id="' + id + '" title="' + name + '" data-name="' + name + '" data-type="' + type + '" data-group="' + group + '"  data-fields="' + fields + '" src="' + src + '" draggable="true" ondragstart="drag(event)" ondragend="dragend(event)" class="unique">');
+                        }
+                        else if (img.hasClass('uniquef')) {
+                            $('#modules').append('<img id="' + id + '" title="' + name + '" data-name="' + name + '" data-type="' + type + '" data-group="' + group + '"  data-fields="' + fields + '" src="' + src + '" draggable="false" ondragstart="drag(event)" ondragend="dragend(event)" class="uniquef">');
+                        }
+                        //SeqNO--;
+                        //alert($(img).attr('SeqNO'));
+                        AddedModules.splice(SeqNO, 1);
+                        $(this).addClass('droppable');
+                        $(this).css('height', '100px');
+                        $(this).css('border', '1px dotted #aaaaaa');
+                        $(this).attr("ondragover", "allowDrop(event)");
+                        $(this).attr("ondrop", "drop(event)");
+                        $(img).remove();
+                        var next = $(this).next('div');
+                        if ($(next).html() == "") {
+                            $(next).remove();
+                        }
+                    }
+                }
+            }
+        }
+        );
+        function addContainer() {
+            var id = makeid();
+            $('#bgcolor').append('<div id="' + id + '" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" class="droppable"></div>');
+        }
+        $('.add').click(function () {
+            addContainer();
+            scroll();
+        }
+        );
+        $('.print').click(function () {
+            var name = $('#emailName').val();
+            var id = $('#campaignID').val();
+            var content = $('html').clone().html();
+            $(this).addClass('loading');
+            var formData = new FormData();
+            var blob = new Blob([content], {
+                type: "text/plain;charset=utf-8"
+            }
+            );
+            if (!document.documentMode && !/Edge/.test(navigator.userAgent)) {
+                if (typeof File === "function") {
+                    var file = new File([blob], "Brief for: " + name + ".html");
+                    formData.append("brief", file);
+                    formData.append("requestID", id);
+                    $.ajax({
+                        type: "POST",
+                        url: "https://hooks.zapier.com/hooks/catch/1182652/gax5xo/",
+                        xhr: function () {
+                            var myXhr = $.ajaxSettings.xhr();
+                            return myXhr;
+                        }
+                        ,
+                        success: function (data) {
+                            if (data.status == "success") {
+                                $('.print').removeClass('loading');
+                                alert("Your Email Brief has been successfully attached to the Campaign Element.\n\nYou can now close this window.");
+                            }
+                        }
+                        ,
+                        error: function (error) {
+                            alert("Status error: " + error + ".");
+                        }
+                        ,
+                        async: true,
+                        data: formData,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        timeout: 60000
+                    }
+                    );
+                }
+            }
+            if (typeof window.navigator.msSaveBlob !== "undefined") {
+                alert("Please attach your file to the relevant Campaign Element!\n\nIn future, use Google Chrome and it will attach automatically for you!");
+                window.navigator.msSaveBlob(blob, "Brief for: " + name + ".html");
+            }
+        }
+        );
+        function makeid() {
+            var text = "";
+            var possible = "abcdefghijklmnopqrstuvwxyz";
+            for (var i = 0; i < 5; i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            return text;
+        }
+        $('.controls').on('click', '.showFields.fa-arrow-right', function () {
+            var click = $('body').find('.showFields.fa-arrow-right');
+            $(click).each(function () {
+                $(this).prev('span').text('');
+                $(this).next('span').text('Back to Step 1.');
+                $(this).parent().css('text-align', 'left');
+            }
+            );
+            togglePanes();
+            $('.controls .add').hide();
+            $('.instructions').css('visibility', 'hidden');
+            $('#bgcolor > .droppable').remove();
+            $('#bgcolor > div').each(function () {
+                $(this).addClass('locked');
+                $(this).children().removeAttr("ondragstart");
+                $(this).children().removeAttr("draggable");
+                $(this).removeAttr("ondragover");
+                $(this).removeAttr("ondrop");
+            }
+            );
+        }
+        );
+        $('.controls').on('click', '.showFields.fa-arrow-left', function () {
+            var click = $('body').find('.showFields.fa-arrow-left');
+            $(click).each(function () {
+                $(this).prev('span').text('On to Step 2.');
+                $(this).next('span').text('');
+                $(this).parent().css('text-align', 'right');
+            }
+            );
+            addContainer();
+            togglePanes();
+            $('.controls .add').show();
+            $('.instructions').css('visibility', 'visible');
+            $('#bgcolor > div').each(function () {
+                $(this).removeClass('locked');
+                $(this).children().attr("ondragstart", "drag(event)");
+                $(this).children().attr("draggable", "false");
+                if ($(this).hasClass('droppable')) {
+                    $(this).attr("ondragover", "allowDrop(event)");
+                    $(this).attr("ondrop", "drop(event)");
+                }
+            }
+            );
+        }
+        );
+        function togglePanes() {
+            $("#left").toggle("slide");
+            $("#fields").toggle("slide");
+            $('.showFields').toggleClass("fa-arrow-right");
+            $('.showFields').toggleClass("fa-arrow-left");
+        }
+        $('body').on('click', '.name', function () {
+            if ($(this).hasClass('active')) {
+                hideInputs();
+            }
+            else {
+                hideInputs();
+                $(this).addClass('active');
+                $(this).siblings('.inputs').slideDown();
+            }
+        }
+        );
+        function hideInputs() {
+            $('.name').removeClass('active');
+            $('.inputs').slideUp();
+        }
+
+        $('#chooseLayout').change(function () {
+
+            //GW    var r = confirm("You cannot change this later. Are you sure to proceed with "+$(this).val()+" layout?");
+            //GW hard coding r to true as commenting out the confirm / alert above.   	
+            var r = true;
+            if (r == true) {
+                $('#chooseLayout').slideUp();
+                $('.step1').slideUp();
+                $('.step1').removeClass('step1');
+                $('.step2').fadeIn();
+                $('.step2').removeClass('step2');
+                $('#modules > img').slideUp();
+                //GW          var choice = $(this).val();
+                //GW hard coding choice no matter what is selected
+                var choice = "";
+                $('#modules > img').each(function () {
+                    var type = $(this).data('type');
+                    if (type == choice || $(this).hasClass('unique') || $(this).hasClass('uniquef')) {
+                        $(this).slideDown();
+                    }
+                }
+                );
+                if (choice == "zmodule") {
+                    //$('#filter').slideDown();
+                    $('#modules').slideDown();
+                }
+                else {
+                    //$('#filter').slideUp();do nothing
+                    $('#modules').slideDown();
+                }
+            }
+            else {
+                $('#chooseLayout').val("");
+            }
+        }
+        );
+        $('#includeResend').change(function () {
+            if ($(this).val() == "Yes") {
+                $('.resendSettings').slideDown();
+            }
+            else {
+                $('.resendSettings').slideUp();
+            }
+        }
+        );
+        $('#dynamics').on('blur', 'input,.nicEdit-main,textarea', function () {
+            $('#dynamics > div').each(function () {
+                var input = $(this).find('input,textarea');
+                var area = $(this).find('.nicEdit-main');
+                var error = 0;
+                $(area).each(function () {
+                    $(this).parent().siblings('textarea').text($(this).text());
+                    if ($(this).text() == "") {
+                        error += 1;
+                    }
+                }
+                );
+
+
+                $(input).each(function () {
+                    if ($(this).val() == "") {
+                        error += 1;
+                    }
+                }
+                );
+                if (error > 0) {
+                    $(this).children('.name').addClass('invalid');
+                    $(this).children('.name').removeClass('valid');
+                }
+                else {
+                    $(this).children('.name').removeClass('invalid');
+                    $(this).children('.name').addClass('valid');
+                }
+            }
+            );
+        }
+        );
+        /*$('#submit_code').on('click', function() {
+      var GeneratedHTML="";
+      var TopCode="";
+      var BotCode="";
+      var data;
+    var r = confirm("Are you sure You want to submit?");
+      if (r == true)
+      {
+        Tabletop.init( {
+        key: 'https://docs.google.com/spreadsheets/d/11-BBc4wG1EGNn61lcTRnN1b4JbP4nGl7wdOAAaVX3M40/edit#gid=0',
+        callback: function(data, tabletop) {
+  },
+   simpleSheet: true });
+      AddedModules.splice(0,AddedModules.length);
+        console.log(AddedModules)
+      $( "#bgcolor" ).children().each(function( index ) {
+        if($(this).find("img").attr('data-name'))
+        {
+          AddedModules.push($(this).find("img").attr('data-name'))
+        }
+        });
+        for ( var key in CodeBase ) {
+          if(CodeBase[key].Module_name=="TOP_CODE")
+          {
+            TopCode=CodeBase[key].Code;
+          }
+          //continue;
+        }
+        $.each( AddedModules, function( key1, value ) {
+              for ( var key in CodeBase ) {
+              if(CodeBase[key].Module_name==value)
+              {
+                 GeneratedHTML+=CodeBase[key].Code;             
+              }
+            //continue;
+            }
+          for ( var key in CodeBase ) {
+          if(CodeBase[key].Module_name=="BOT_CODE")
+          {
+            BotCode=CodeBase[key].Code;
+          }
+            //continue;
+        }
+  });
+   
+   */
+
+        /*
+        var download_link = document.createElement('a');
+           download_link.href='data:text/html;charset=utf-8,' + encodeURIComponent(TopCode+GeneratedHTML+BotCode);
+           download_link.download = "yourwebpage"+randomPassword(8);
+           document.body.appendChild(download_link);
+           download_link.click();
+           document.body.removeChild(download_link);
+           }
+           });
+         */
+
+        $('#Copy_Code').on('click', function () {
+            var GeneratedHTML = "";
+            var TopCode = "";
+            var BotCode = "";
+            var data;
+            {
+
+
+
+
+
+                AddedModules.splice(0, AddedModules.length);
+                $("#bgcolor").children().each(function (index) {
+                    if ($(this).find("img").attr('data-name')) {
+                        AddedModules.push($(this).find("img").attr('data-name'))
+                    }
+                }
+                );
+                for (var key in CodeBase) {
+
+                    {
+                        if (CodeBase[key].Module_name == "TOP_CODE") {
+                            TopCode = CodeBase[key].Code;
+                        }
+                    }
+
+
+
+
+                }
+                $.each(AddedModules, function (key1, value) {
+                    console.log(key1 + "--->" + value)
+                    for (var key in CodeBase) {
+                        if (CodeBase[key].Module_name == value && (CodeBase[key].ModType == "" || CodeBase[key].Module_name == "A1"))
+                        //              if(CodeBase[key].Module_name==value &&(CodeBase[key].ModType==$('#chooseLayout').val()||CodeBase[key].Module_name=="A1"))
+                        {
+                            GeneratedHTML += CodeBase[key].Code;
+                        }
+                        //continue;
+                    }
+                    for (var key in CodeBase) {
+                        if (CodeBase[key].Module_name == "BOT_CODE") {
+                            BotCode = CodeBase[key].Code;
+                        }
+                        //continue;
+                    }
+                }
+                );
+                const el = document.createElement('textarea');
+                el.value = TopCode + GeneratedHTML + BotCode;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+                alert("HTML Code copied to Clipboard");
+            }
+        }
+        );
+        function randomPassword(length) {
+            var chars = "abcdefghijklmnopqrstuvwxyz!@#$%^&*()-+<>ABCDEFGHIJKLMNOP1234567890";
+            var pass = "";
+            for (var x = 0; x < length; x++) {
+                var i = Math.floor(Math.random() * chars.length);
+                pass += chars.charAt(i);
+            }
+            return pass;
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            if ($(window).width() > 1000) {
+                $(".inline").colorbox({
+                    inline: true, width: "950px", height: "90%"
+                }
+                );
+            }
+            else {
+                $(".inline").colorbox({
+                    inline: true, width: "100%", height: "90%"
+                }
+                );
+            }
+        }
+        );
+    </script>
+</body>
+
+</html>

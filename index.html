@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Builder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      height: 100vh;
+    }
+    .column {
+      flex: 1;
+      padding: 10px;
+      border-right: 1px solid #ccc;
+      overflow-y: auto;
+    }
+    .column:last-child {
+      border-right: none;
+    }
+    .column h2 {
+      margin-top: 0;
+    }
+    .section {
+      padding: 10px;
+      margin: 10px 0;
+      background: #f4f4f4;
+      border: 1px solid #ddd;
+      cursor: grab;
+    }
+    .preview .section {
+      cursor: pointer;
+      margin: 10px 0;
+      border: 1px solid #007bff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .preview .section.active {
+      border-color: #ff9800;
+      background: #fff8e1;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    input[type="button"] {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      padding: 10px;
+    }
+    input[type="button"]:hover {
+      background-color: #0056b3;
+    }
+    .droppable {
+      min-height: 200px;
+      padding: 10px;
+      background: #f9f9f9;
+      border: 2px dashed #ccc;
+      text-align: center;
+    }
+    .droppable.drag-over {
+      border-color: #007bff;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Column 1: Section List -->
+<div class="column">
+  <h2>Available Sections</h2>
+  <div class="section" draggable="true" data-type="header">Header</div>
+  <div class="section" draggable="true" data-type="banner">Banner</div>
+  <div class="section" draggable="true" data-type="footer">Footer</div>
+  <div class="section" draggable="true" data-type="image-right">Image with Content Right</div>
+  <div class="section" draggable="true" data-type="image-left">Image with Content Left</div>
+</div>
+
+<!-- Column 2: Email Preview -->
+<div class="column preview">
+  <h2>Email Preview</h2>
+  <div class="droppable" id="email-preview">
+    Drag sections here
+  </div>
+</div>
+
+<!-- Column 3: Content Editor -->
+<div class="column">
+  <h2>Content Editor</h2>
+  <div id="content-editor">
+    <p>Select a section to customize its content.</p>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+<script>
+  const sections = {
+    header: {
+      template: '<div class="section">Header - <span class="logo-text"></span></div>',
+      fields: [
+        { name: "Logo URL", type: "text", key: "logoUrl" },
+        { name: "Logo Link", type: "text", key: "logoLink" }
+      ]
+    },
+    banner: {
+      template: '<div class="section">Banner Section</div>',
+      fields: []
+    },
+    footer: {
+      template: '<div class="section">Footer</div>',
+      fields: []
+    },
+    "image-right": {
+      template:
+        '<div class="section"><img class="img-right" alt="" /><div class="content-right"></div></div>',
+      fields: [
+        { name: "Image URL", type: "text", key: "imgUrl" },
+        { name: "Content", type: "textarea", key: "content" }
+      ]
+    },
+    "image-left": {
+      template:
+        '<div class="section"><div class="content-left"></div><img class="img-left" alt="" /></div>',
+      fields: [
+        { name: "Image URL", type: "text", key: "imgUrl" },
+        { name: "Content", type: "textarea", key: "content" }
+      ]
+    }
+  };
+
+  const emailPreview = document.getElementById("email-preview");
+  const contentEditor = document.getElementById("content-editor");
+  let activeSection = null;
+
+  // Drag and Drop Logic
+  document.querySelectorAll(".section[draggable=true]").forEach(el => {
+    el.addEventListener("dragstart", e => {
+      e.dataTransfer.setData("type", el.dataset.type);
+    });
+  });
+
+  emailPreview.addEventListener("dragover", e => {
+    e.preventDefault();
+    emailPreview.classList.add("drag-over");
+  });
+
+  emailPreview.addEventListener("dragleave", () => {
+    emailPreview.classList.remove("drag-over");
+  });
+
+  emailPreview.addEventListener("drop", e => {
+    e.preventDefault();
+    emailPreview.classList.remove("drag-over");
+
+    const type = e.dataTransfer.getData("type");
+    const section = document.createElement("div");
+    section.innerHTML = sections[type].template;
+    section.classList.add("section");
+    section.dataset.type = type;
+    section.dataset.content = JSON.stringify({});
+    section.addEventListener("click", () => selectSection(section));
+
+    const afterElement = getDragAfterElement(emailPreview, e.clientY);
+    if (afterElement == null) {
+      emailPreview.appendChild(section);
+    } else {
+      emailPreview.insertBefore(section, afterElement);
+    }
+    makeSectionsDraggable();
+  });
+
+  // Sortable for Reordering
+  function makeSectionsDraggable() {
+    new Sortable(emailPreview, {
+      animation: 150
+    });
+  }
+  makeSectionsDraggable();
+
+  // Get element after which to insert
+  function getDragAfterElement(container, y) {
+    const draggableElements = [...container.querySelectorAll(".section:not(.dragging)")];
+    return draggableElements.reduce((closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset) {
+        return { offset: offset, element: child };
+      } else {
+        return closest;
+      }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+  }
+
+  // Select Section Logic
+  function selectSection(section) {
+    document
+      .querySelectorAll("#email-preview .section")
+      .forEach(s => s.classList.remove("active"));
+    section.classList.add("active");
+    activeSection = section;
+    updateContentEditor(section);
+  }
+
+  // Update Content Editor
+  function updateContentEditor(section) {
+    const type = section.dataset.type;
+    const fields = sections[type].fields;
+    const content = JSON.parse(section.dataset.content || "{}");
+    contentEditor.innerHTML =
+      fields
+        .map(field => {
+          if (field.type === "textarea") {
+            return `<label>${field.name}</label><textarea data-key="${field.key}">${content[field.key] || ""}</textarea>`;
+          } else {
+            return `<label>${field.name}</label><input type="${field.type}" data-key="${field.key}" value="${content[field.key] || ""}" />`;
+          }
+        })
+        .join("") +
+      `<input type="button" value="Save" id="save-content" />
+       <input type="button" value="Delete Section" id="delete-section" style="background-color: red; color: white;" />`;
+
+    document.getElementById("save-content").addEventListener("click", () => {
+      const inputs = contentEditor.querySelectorAll("[data-key]");
+      inputs.forEach(input => {
+        content[input.dataset.key] = input.tagName === "TEXTAREA" ? input.value : input.value;
+      });
+      section.dataset.content = JSON.stringify(content);
+      updatePreview(section, content);
+    });
+
+    document.getElementById("delete-section").addEventListener("click", () => {
+      section.remove();
+      contentEditor.innerHTML = '<p>Select a section to customize its content.</p>';
+    });
+  }
+
+  // Update Preview
+  function updatePreview(section, content) {
+    const type = section.dataset.type;
+    if (type === "header") {
+      section.querySelector(".logo-text").textContent = content.logoUrl || "";
+    } else if (type === "image-right") {
+      section.querySelector(".img-right").src = content.imgUrl || "";
+      section.querySelector(".content-right").textContent = content.content || "";
+    } else if (type === "image-left") {
+      section.querySelector(".img-left").src = content.imgUrl || "";
+      section.querySelector(".content-left").textContent = content.content || "";
+    }
+  }
+</script>
+
+</body>
+</html>
